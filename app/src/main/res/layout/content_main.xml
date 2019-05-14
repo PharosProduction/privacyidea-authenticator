@@ -5,6 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="it.netknights.nilsbehlen.piauthenticator.it.netknights.piauthenticator.MainActivity">
+    tools:context="com.evosecurity.nilsbehlen.piauthenticator.it.netknights.piauthenticator.MainActivity">
 
 </androidx.constraintlayout.widget.ConstraintLayout>

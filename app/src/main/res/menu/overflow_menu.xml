@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="it.netknights.nilsbehlen.piauthenticator.it.netknights.piauthenticator.MainActivity">
+    tools:context="com.evosecurity.nilsbehlen.piauthenticator.it.netknights.piauthenticator.MainActivity">
 
     <item
         android:id="@+id/action_enter_detail"

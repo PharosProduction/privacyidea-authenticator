@@ -5,7 +5,7 @@ android {
     compileSdkVersion 28
 
     defaultConfig {
-        applicationId 'it.netknights.piauthenticator'
+        applicationId 'com.evosecurity.evo'
         minSdkVersion 19
         targetSdkVersion 28
 
@@ -69,8 +69,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0-alpha01'
 
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-messaging:17.5.0'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-core:1.10.19'
@@ -89,3 +89,4 @@ dependencies {
     androidTestUtil 'androidx.test:orchestrator:1.1.1'
 
 }
+apply plugin: 'com.google.gms.google-services'

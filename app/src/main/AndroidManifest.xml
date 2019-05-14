@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="it.netknights.piauthenticator">
+    package="com.evosecurity.evo">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
+      android:name=".application.App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name=".MainActivity"
+            android:name="com.evosecurity.evo.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -23,32 +24,35 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".EnterDetailsActivity"
+            android:name="com.evosecurity.evo.EnterDetailsActivity"
             android:label="Enter Details"
-            android:parentActivityName=".MainActivity"
+            android:parentActivityName="com.evosecurity.evo.MainActivity"
             android:windowSoftInputMode="stateHidden">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.netknights.piauthenticator.MainActivity" />
+                android:value="com.evosecurity.evo.MainActivity" />
         </activity>
 
         <activity
-            android:name=".AboutActivity"
+            android:name="com.evosecurity.evo.AboutActivity"
             android:label="About"
-            android:parentActivityName=".MainActivity">
+            android:parentActivityName="com.evosecurity.evo.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="it.netknights.piauthenticator.MainActivity" />
+                android:value="com.evosecurity.evo.MainActivity" />
         </activity>
 
-        <service android:name=".FCMReceiverService">
+        <service android:name="com.evosecurity.evo.FCMReceiverService"
+          android:exported="true"
+          android:enabled="true"
+          >
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <service
-            android:name=".PushAuthService"
+            android:name="com.evosecurity.evo.PushAuthService"
             android:icon="@mipmap/ic_launcher"
             android:label="PushAuthService">
         </service>
