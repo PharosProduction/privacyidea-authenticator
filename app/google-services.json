@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "159148843832-iba2kqclv66tl2vsf1d14h0i0826pkds.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evosecurity.evo",
+            "certificate_hash": "158d094689ec70a5256f16fa7065d9001937a54f"
+          }
+        },
+        {
+          "client_id": "159148843832-mbfogqnsorjss8bof14mp5knaatpd74t.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.evosecurity.evo",
+            "certificate_hash": "a8e77370848ba2f6e597ed981a50a02e93d6a24e"
+          }
+        },
+        {
           "client_id": "159148843832-lvkl8ul259nql28chdbd45mcgoegq941.apps.googleusercontent.com",
           "client_type": 3
         }
