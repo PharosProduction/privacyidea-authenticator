@@ -20,6 +20,8 @@
 
 package com.evosecurity.evo;
 
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -33,6 +35,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Map;
 
 import javax.net.ssl.HostnameVerifier;
@@ -64,41 +67,54 @@ class Endpoint {
         this.callback = callback;
     }
 
-    boolean connect() {
-        logprint("Setting up connection to " + url);
-        URL url;
+    private URL buildURL() {
         try {
-            url = new URL(this.url);
+//            return new URL(this.url);
+            return new URL("https://demo3.evosecurity.com/ttype/push");
         } catch (MalformedURLException e) {
             callback.updateStatus(STATUS_ENDPOINT_MALFORMED_URL);
             e.printStackTrace();
-            return false;
+
+            return null;
         }
-        HttpURLConnection con;
+    }
+
+    private HttpURLConnection openConnection(URL url) {
         try {
+            HttpURLConnection con;
+
             if (url.getProtocol().equals("https")) {
                 con = (HttpsURLConnection) url.openConnection();
+
+                if (!sslVerify) {
+                    con = turnOffSSLVerification((HttpsURLConnection) con);
+                }
             } else {
                 con = (HttpURLConnection) url.openConnection();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        con.setDoOutput(true);
-        con.setDoInput(true);
-        try {
-            con.setRequestMethod("POST");
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        }
-        con.setReadTimeout(READ_TIMEOUT);
-        con.setConnectTimeout(CONNECT_TIMEOUT);
 
-        if (!sslVerify && (con instanceof HttpsURLConnection)) {
-            con = turnOffSSLVerification((HttpsURLConnection) con);
+            con.setDoOutput(true);
+            con.setDoInput(true);
+            con.setRequestMethod("POST");
+            con.setReadTimeout(READ_TIMEOUT);
+            con.setConnectTimeout(CONNECT_TIMEOUT);
+
+            return con;
+        } catch (IOException e) {
+            callback.updateStatus(STATUS_ENDPOINT_MALFORMED_URL);
+            e.printStackTrace();
+
+            return null;
         }
-        logprint("Sending...");
+    }
+
+    boolean connect() {
+        URL url = buildURL();
+        if (url == null) return false;
+
+        HttpURLConnection con = openConnection(url);
+        if (con == null) return false;
+
         OutputStream os;
         try {
             os = con.getOutputStream();
@@ -108,17 +124,26 @@ class Endpoint {
             return false;
         }
 
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, StandardCharsets.UTF_8));
-        // Sending the map's k:v pairs separated with & after the first
+        OutputStreamWriter streamWriter = new OutputStreamWriter(os, StandardCharsets.UTF_8);
+        BufferedWriter writer = new BufferedWriter(streamWriter);
+
         try {
             String toSend = "";
-            logprint("Data:");
+
             for (String key : data.keySet()) {
-                toSend += key + "=" + data.get(key);
+                if (key.equals("serial")) {
+                    String[] vals = data.get(key).split("-");
+                    String serial = vals[vals.length - 1];
+                    toSend += key + "=" + serial;
+                } else {
+                    toSend += key + "=" + data.get(key);
+                }
+
                 logprint(toSend);
                 writer.write(toSend);
                 toSend = "&";
             }
+
             writer.flush();
             writer.close();
             os.close();
@@ -127,30 +152,33 @@ class Endpoint {
             e.printStackTrace();
         }
 
-        logprint("Getting response...");
-        int responsecode = 0;
         try {
-            responsecode = con.getResponseCode();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        logprint("response code: " + responsecode);
-        BufferedReader br;
-        String line;
-        StringBuilder response = new StringBuilder();
-        try {
-            br = new BufferedReader(new InputStreamReader(con.getInputStream()));
-            while ((line = br.readLine()) != null) {
-                response.append(line);
+            int responsecode = con.getResponseCode();
+            BufferedReader br;
+            String line;
+            StringBuilder response = new StringBuilder();
+            try {
+                br = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                while ((line = br.readLine()) != null) {
+                    response.append(line);
+                }
+                callback.responseReceived(response.toString(), responsecode);
+
+                con.disconnect();
+
+                return true;
+            } catch (IOException e) {
+                callback.updateStatus(STATUS_ENDPOINT_ERROR);
+                e.printStackTrace();
             }
-            logprint("response: " + response.toString());
-            callback.responseReceived(response.toString(), responsecode);
         } catch (IOException e) {
             callback.updateStatus(STATUS_ENDPOINT_ERROR);
             e.printStackTrace();
         }
+
         con.disconnect();
-        return true;
+
+        return false;
     }
 
     private HttpsURLConnection turnOffSSLVerification(HttpsURLConnection con) {
