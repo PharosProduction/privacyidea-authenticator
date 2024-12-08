@@ -28,3 +28,6 @@ You can run the tests from within Android Studio. Please assure to have a necess
 See the issues.
 
 Ideas and pull requests are welcome.
+
+By [Dmytro Nasyrov, Founder, CTO at Pharos Production Inc.](https://www.linkedin.com/in/dmytronasyrov/)
+And [Pharos Production Inc. - Web3, blockchain, fintech, defi software development services](https://pharosproduction.com)
